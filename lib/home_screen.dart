@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/data/database.dart';
 import 'add_task_screen.dart';
 import 'profile_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  DatabaseHelper databaseHELP = DatabaseHelper();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    databaseHELP = DatabaseHelper();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +40,33 @@ class HomeScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
-        child: Text(
-          'Lista de Tarefas',
-          style: TextStyle(fontSize: 18),
+      body:
+      Center(
+        child: FutureBuilder<List<Map<String, dynamic>>>(
+          future: databaseHELP.getTasks(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasData) {
+              final tasks = snapshot.data;
+              return ListView.builder(
+                itemCount: tasks!.length,
+                itemBuilder: (context, index) {
+                  final task = tasks[index];
+                  return ListTile(
+                    title: Text(task['title']),
+                    subtitle: Text(task['description']),
+                  );
+                },
+              );
+            }
+            return Center(
+              child: Text('Nenhuma tarefa encontrada.'),
+            );
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
