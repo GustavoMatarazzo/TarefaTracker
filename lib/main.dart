@@ -3,10 +3,10 @@ import 'package:projeto/login_screen.dart';
 import 'home_screen.dart';
 
 void main() {
-  runApp(TarefaTrackerApp());
+  runApp(MyApp());
 }
 
-class TarefaTrackerApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

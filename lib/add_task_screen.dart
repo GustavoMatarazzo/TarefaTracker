@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'data/database.dart';
+import 'home_screen.dart';
 
 class AddTaskScreen extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     databaseHELP = DatabaseHelper();
   }
@@ -39,6 +40,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Adicionar Tarefa'),
+        leading: IconButton(onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        }, icon: Icon(Icons.close),),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -75,7 +82,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
               DropdownButtonFormField(
                 decoration: InputDecoration(labelText: 'Prioridade'),
-                items: ['Alta', 'Média', 'Baixa'].map((String priority) {
+                items: ['Alta (30 pts)', 'Média (20 pts)', 'Baixa (10 pts)'].map((String priority) {
                   return DropdownMenuItem(
                     value: priority,
                     child: Text(priority),
@@ -103,9 +110,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       'description': _description,
                       'dueDate': _dueDate != null ? _dueDate!.toIso8601String() : null,
                       'priority': _priority,
+                      'isCompleted': 0,
                     };
                     addTask(task);
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    );
                   }
                 },
                 child: Text('Salvar Tarefa'),
